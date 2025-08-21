@@ -21,6 +21,8 @@ import {
 } from '@/lib/server-actions';
 import type { ReadmeTemplate } from '@/app/actions';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import JSZip from "jszip";
+import { saveAs } from "file-saver";
 
 
 interface ProcessedFile {
@@ -212,54 +214,66 @@ export default function KeywordCombinerPage() {
     setIsLoading(false);
   };
   
-  const handleDownloadSingleFile = async (file: ProcessedFile) => {
+    // Tải xuống 1 file readme.md
+    const handleDownloadSingleFile = (file: ProcessedFile) => {
     try {
-      const { saveAs } = await import('file-saver');
-      const blob = new Blob([file.content], { type: 'text/plain;charset=utf-8' });
-      const fileName = 'readme.md';
-      saveAs(blob, fileName);
+        if (!file) return;
+        const blob = new Blob([file.content], { type: "text/plain;charset=utf-8" });
+        saveAs(blob, "readme.md");
     } catch (error) {
-      console.log(error);
-      toast({ title: 'Lỗi tải xuống', description: 'Không thể tải thư viện cần thiết.', variant: 'destructive' });
+        console.error(error);
+        toast({
+        title: "Lỗi tải xuống",
+        description: "Không thể tải thư viện cần thiết.",
+        variant: "destructive",
+        });
     }
-  };
-  
-  const handleDownloadZip = async () => {
-    if (processedFiles.length === 0) return;
+    };
+
+    // Tải xuống tất cả dưới dạng ZIP
+    const handleDownloadZip = async () => {
+    if (!processedFiles || processedFiles.length === 0) return;
     setIsDownloadingZip(true);
-    
-    try {
-      const JSZip = (await import('jszip')).default;
-      const { saveAs } = await import('file-saver');
-      const zip = new JSZip();
 
-      processedFiles.forEach((file, index) => {
+    try {
+        const zip = new JSZip();
+
+        processedFiles.forEach((file, index) => {
         const folder = zip.folder((index + 1).toString());
-        folder?.file('readme.md', file.content);
-      });
+        folder?.file("readme.md", file.content);
+        });
 
-      const content = await zip.generateAsync({ type: 'blob' });
-      saveAs(content, 'updated_readmes.zip');
+        const content = await zip.generateAsync({ type: "blob" });
+        saveAs(content, "updated_readmes.zip");
     } catch (error) {
-      console.log(error);
-      toast({ title: 'Lỗi tạo ZIP', description: 'Không thể tải thư viện hoặc tạo tệp ZIP.', variant: 'destructive' });
+        console.error(error);
+        toast({
+        title: "Lỗi tạo ZIP",
+        description: "Không thể tạo tệp ZIP.",
+        variant: "destructive",
+        });
     } finally {
-      setIsDownloadingZip(false);
+        setIsDownloadingZip(false);
     }
-  };
-  
-  const handleDownloadTitles = async () => {
-    if (processedFiles.length === 0) return;
+    };
+
+    // Tải xuống danh sách titles
+    const handleDownloadTitles = () => {
+    if (!processedFiles || processedFiles.length === 0) return;
 
     try {
-      const { saveAs } = await import('file-saver');
-      const titlesString = processedFiles.map(file => `"${file.name}"`).join(', ');
-      const blob = new Blob([titlesString], { type: 'text/plain;charset=utf-8' });
-      saveAs(blob, 'titles.txt');
+        const titlesString = processedFiles.map(file => `"${file.name}"`).join(", ");
+        const blob = new Blob([titlesString], { type: "text/plain;charset=utf-8" });
+        saveAs(blob, "titles.txt");
     } catch (error) {
-        toast({ title: 'Lỗi tải xuống', description: 'Không thể tải thư viện cần thiết.', variant: 'destructive' });
+        console.error(error);
+        toast({
+        title: "Lỗi tải xuống",
+        description: "Không thể tải thư viện cần thiết.",
+        variant: "destructive",
+        });
     }
-  };
+    };
   
   const handleSaveTemplate = async () => {
       if (!isAdmin || !editingTemplate) return;
