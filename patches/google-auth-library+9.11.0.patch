@@ -1,0 +1,18 @@
+diff --git a/node_modules/google-auth-library/build/src/auth/googleauth.js b/node_modules/google-auth-library/build/src/auth/googleauth.js
+index 4a82200..342b260 100644
+--- a/node_modules/google-auth-library/build/src/auth/googleauth.js
++++ b/node_modules/google-auth-library/build/src/auth/googleauth.js
+@@ -26,7 +26,10 @@
+ // You may obtain a copy of the License at
+ //      http://www.apache.org/licenses/LICENSE-2.0
+ Object.defineProperty(exports, "__esModule", { value: true });
+-exports.GoogleAuth = exports.GoogleAuthExceptionMessages = exports.CLOUD_SDK_CLIENT_ID = void 0;
+-const child_process_1 = require("child_process");
++exports.GoogleAuth = exports.GoogleAuthExceptionMessages = exports.CLOUD_SDK_CLIENT_ID = void 0
++let child_process_1;
++if (typeof window === 'undefined') {
++    child_process_1 = require("child_process");
++}
+ const fs = require("fs");
+ const gcpMetadata = require("gcp-metadata");
+ const os = require("os");

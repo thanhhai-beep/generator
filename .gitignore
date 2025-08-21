@@ -1,0 +1,19 @@
+# Tệp môi trường
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Phụ thuộc
+/node_modules
+
+# Build output
+/.next/
+/out/
+
+# Các tệp khác
+.DS_Store
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

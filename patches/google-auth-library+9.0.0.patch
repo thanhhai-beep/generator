@@ -1,0 +1,15 @@
+diff --git a/node_modules/google-auth-library/build/src/auth/googleauth.js b/node_modules/google-auth-library/build/src/auth/googleauth.js
+index 053c814..8d548db 100644
+--- a/node_modules/google-auth-library/build/src/auth/googleauth.js
++++ b/node_modules/google-auth-library/build/src/auth/googleauth.js
+@@ -26,7 +26,9 @@
+ // complete an ADC flow.
+ Object.defineProperty(exports, "__esModule", { value: true });
+ exports.GoogleAuth = exports.GoogleAuthExceptionMessages = exports.CLOUD_SDK_CLIENT_ID = void 0;
+-const child_process_1 = require("child_process");
++const child_process_1 = (typeof window === 'undefined')
++    ? require('child_process')
++    : null;
+ const fs = require("fs");
+ const gcpMetadata = require("gcp-metadata");
+ const os = require("os");
